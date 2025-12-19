@@ -1,0 +1,9 @@
+# Global owners (default reviewers for any change)
+* @Edmonnnnn
+
+# Optional: split by areas (uncomment later)
+# /backend/  @backend-owner
+# /frontend/ @frontend-owner
+# /infra/    @infra-owner
+# /ops/      @ops-owner
+# /docs/     @docs-owner
