@@ -1,0 +1,18 @@
+### Create user (first time)
+POST http://127.0.0.1:8810/api/v1/users
+Content-Type: application/json
+
+{
+  "email": "dup@example.com"
+}
+
+### Create user (duplicate → 409)
+POST http://127.0.0.1:8810/api/v1/users
+Content-Type: application/json
+
+{
+  "email": "dup@example.com"
+}
+
+### List users
+GET http://127.0.0.1:8810/api/v1/users
