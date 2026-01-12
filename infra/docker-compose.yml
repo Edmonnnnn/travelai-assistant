@@ -1,0 +1,72 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: travelai-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-travelai}
+      POSTGRES_USER: ${POSTGRES_USER:-travelai}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change_me}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 5s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: travelai-backend
+    environment:
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-travelai}:${POSTGRES_PASSWORD:-change_me}@db:5432/${POSTGRES_DB:-travelai}
+      SEED_DATA: ${SEED_DATA:-false}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      QDRANT_URL: ${QDRANT_URL:-}
+      PGVECTOR_DSN: ${PGVECTOR_DSN:-}
+    ports:
+      - "${BACKEND_PORT:-8810}:8810"
+    entrypoint: ["/app/entrypoint.sh"]
+    # временно включаем debug, чтобы при следующем фейле было видно причину
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8810", "--log-level", "debug"]
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8810/health', timeout=2).read(); print('ok')\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      # ключевая правка: не долбить healthcheck, пока uvicorn поднимается
+      start_period: 30s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+    container_name: travelai-frontend
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+      BACKEND_INTERNAL_URL: http://backend:8810
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health >/dev/null 2>&1 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  pgdata:
