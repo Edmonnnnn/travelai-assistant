@@ -1,0 +1,343 @@
+{
+  "$defs": {
+    "EnvelopeError": {
+      "description": "Error HITL envelope payload.",
+      "properties": {
+        "client_message": {
+          "title": "Client Message",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "error": {
+          "$ref": "#/$defs/ErrorBlock"
+        },
+        "manager_note": {
+          "default": "",
+          "title": "Manager Note",
+          "type": "string"
+        },
+        "meta": {
+          "$ref": "#/$defs/Meta"
+        },
+        "mode": {
+          "enum": [
+            "assist",
+            "draft",
+            "autopilot"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "ok": {
+          "const": false,
+          "default": false,
+          "enum": [
+            false
+          ],
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "policy_id": {
+          "const": "ERROR_SAFE_01",
+          "default": "ERROR_SAFE_01",
+          "enum": [
+            "ERROR_SAFE_01"
+          ],
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "requires_review": {
+          "const": true,
+          "default": true,
+          "enum": [
+            true
+          ],
+          "title": "Requires Review",
+          "type": "boolean"
+        },
+        "requires_review_reason": {
+          "default": "",
+          "title": "Requires Review Reason",
+          "type": "string"
+        },
+        "risk_color": {
+          "const": "red",
+          "default": "red",
+          "enum": [
+            "red"
+          ],
+          "title": "Risk Color",
+          "type": "string"
+        },
+        "risk_reason": {
+          "title": "Risk Reason",
+          "type": "string"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/Source"
+          },
+          "title": "Sources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ok",
+        "client_message",
+        "manager_note",
+        "mode",
+        "confidence",
+        "risk_color",
+        "risk_reason",
+        "requires_review",
+        "requires_review_reason",
+        "sources",
+        "policy_id",
+        "meta",
+        "error"
+      ],
+      "title": "EnvelopeError",
+      "type": "object"
+    },
+    "EnvelopeSuccess": {
+      "description": "Successful HITL envelope payload.",
+      "properties": {
+        "client_message": {
+          "title": "Client Message",
+          "type": "string"
+        },
+        "confidence": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "manager_note": {
+          "default": "",
+          "title": "Manager Note",
+          "type": "string"
+        },
+        "meta": {
+          "$ref": "#/$defs/Meta"
+        },
+        "mode": {
+          "enum": [
+            "assist",
+            "draft",
+            "autopilot"
+          ],
+          "title": "Mode",
+          "type": "string"
+        },
+        "ok": {
+          "const": true,
+          "default": true,
+          "enum": [
+            true
+          ],
+          "title": "Ok",
+          "type": "boolean"
+        },
+        "policy_id": {
+          "title": "Policy Id",
+          "type": "string"
+        },
+        "requires_review": {
+          "title": "Requires Review",
+          "type": "boolean"
+        },
+        "requires_review_reason": {
+          "default": "",
+          "title": "Requires Review Reason",
+          "type": "string"
+        },
+        "risk_color": {
+          "enum": [
+            "green",
+            "yellow",
+            "red"
+          ],
+          "title": "Risk Color",
+          "type": "string"
+        },
+        "risk_reason": {
+          "title": "Risk Reason",
+          "type": "string"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/Source"
+          },
+          "title": "Sources",
+          "type": "array"
+        }
+      },
+      "required": [
+        "ok",
+        "client_message",
+        "manager_note",
+        "mode",
+        "confidence",
+        "risk_color",
+        "risk_reason",
+        "requires_review",
+        "requires_review_reason",
+        "sources",
+        "policy_id",
+        "meta"
+      ],
+      "title": "EnvelopeSuccess",
+      "type": "object"
+    },
+    "ErrorBlock": {
+      "description": "Error details for failed envelopes.",
+      "properties": {
+        "code": {
+          "enum": [
+            "UPSTREAM_TIMEOUT",
+            "VALIDATION_ERROR",
+            "INTERNAL_ERROR"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "debug_message": {
+          "title": "Debug Message",
+          "type": "string"
+        },
+        "retryable": {
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "user_message": {
+          "title": "User Message",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "user_message",
+        "debug_message",
+        "retryable"
+      ],
+      "title": "ErrorBlock",
+      "type": "object"
+    },
+    "Meta": {
+      "description": "Metadata attached to the envelope.",
+      "properties": {
+        "latency_ms": {
+          "minimum": 0,
+          "title": "Latency Ms",
+          "type": "integer"
+        },
+        "lead_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Lead Id"
+        },
+        "request_id": {
+          "title": "Request Id",
+          "type": "string"
+        },
+        "timestamp": {
+          "format": "date-time",
+          "title": "Timestamp",
+          "type": "string"
+        },
+        "user_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "User Id"
+        }
+      },
+      "required": [
+        "request_id",
+        "timestamp",
+        "latency_ms"
+      ],
+      "title": "Meta",
+      "type": "object"
+    },
+    "Source": {
+      "description": "Source attribution details for the HITL envelope.",
+      "properties": {
+        "ref": {
+          "title": "Ref",
+          "type": "string"
+        },
+        "relevance": {
+          "maximum": 1.0,
+          "minimum": 0.0,
+          "title": "Relevance",
+          "type": "number"
+        },
+        "source_type": {
+          "default": "kb",
+          "enum": [
+            "kb",
+            "rag",
+            "manual",
+            "web",
+            "none"
+          ],
+          "title": "Source Type",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "version",
+        "ref",
+        "source_type",
+        "relevance"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "description": "Root wrapper so Pydantic can emit a single JSON Schema for the union.",
+  "discriminator": {
+    "mapping": {
+      "False": "#/$defs/EnvelopeError",
+      "True": "#/$defs/EnvelopeSuccess"
+    },
+    "propertyName": "ok"
+  },
+  "oneOf": [
+    {
+      "$ref": "#/$defs/EnvelopeSuccess"
+    },
+    {
+      "$ref": "#/$defs/EnvelopeError"
+    }
+  ],
+  "title": "EnvelopeRoot"
+}
