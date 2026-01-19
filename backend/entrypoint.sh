@@ -2,7 +2,7 @@
 set -e
 
 # CLI passthrough: "docker compose run backend alembic ..."
-if [ "$1" = "alembic" ]; then
+if [ "${1:-}" = "alembic" ]; then
   shift
   exec alembic "$@"
 fi
@@ -51,4 +51,22 @@ else
 fi
 
 echo "▶ Starting FastAPI"
+
+# If container command is uvicorn, disable default access logs to reduce noise.
+# We keep only our structured JSON logs from AccessLogMiddleware.
+if [ "${1:-}" = "uvicorn" ]; then
+  has_access_log_flag=false
+
+  for arg in "$@"; do
+    if [ "$arg" = "--access-log" ] || [ "$arg" = "--no-access-log" ]; then
+      has_access_log_flag=true
+      break
+    fi
+  done
+
+  if [ "$has_access_log_flag" = "false" ]; then
+    exec "$@" --no-access-log
+  fi
+fi
+
 exec "$@"

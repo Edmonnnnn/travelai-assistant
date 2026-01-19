@@ -26,4 +26,5 @@ COPY alembic /app/alembic
 CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${BACKEND_PORT:-8810}"]
 
 COPY entrypoint.sh /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 ENTRYPOINT ["sh", "-c", "sh /app/entrypoint.sh"]

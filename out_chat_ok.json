@@ -1,0 +1,22 @@
+﻿{
+    "ok":  true,
+    "client_message":  "stub",
+    "manager_note":  "",
+    "mode":  "assist",
+    "confidence":  0.0,
+    "risk_color":  "green",
+    "risk_reason":  "",
+    "requires_review":  false,
+    "requires_review_reason":  "",
+    "sources":  [
+
+                ],
+    "policy_id":  "RAG_SAFE_01",
+    "meta":  {
+                 "request_id":  "166cd651969c4961a8dd2bcc508c70e3",
+                 "timestamp":  "2026-01-19T11:28:47.461733Z",
+                 "latency_ms":  0,
+                 "lead_id":  null,
+                 "user_id":  null
+             }
+}
