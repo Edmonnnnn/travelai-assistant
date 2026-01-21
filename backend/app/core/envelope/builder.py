@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import List, Optional
+from typing import Any, List, Optional
 
 from .schema import (
     EnvelopeSuccess,
@@ -50,6 +50,7 @@ def success_envelope(
     sources: Optional[List[Source]] = None,
     policy_id: str = "RAG_SAFE_01",
     manager_note: str = "",
+    data: Any | None = None,
     lead_id: Optional[str] = None,
     user_id: Optional[str] = None,
 ) -> EnvelopeSuccess:
@@ -71,6 +72,7 @@ def success_envelope(
         requires_review_reason=requires_review_reason,
         sources=sources or [],
         policy_id=policy_id,
+        data=data,
         meta=meta,
     )
 
@@ -90,6 +92,7 @@ def error_envelope(
     requires_review_reason: str = "нужно проверить инцидент",
     manager_note: str = "Кратко: что упало и где искать.",
     sources: Optional[List[Source]] = None,
+    data: Any | None = None,
     lead_id: Optional[str] = None,
     user_id: Optional[str] = None,
 ) -> EnvelopeError:
@@ -118,6 +121,7 @@ def error_envelope(
         requires_review_reason=requires_review_reason,
         sources=sources or [],
         policy_id="ERROR_SAFE_01",
+        data=data,
         meta=meta,
         error=err,
     )

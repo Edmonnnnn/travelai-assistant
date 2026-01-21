@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Annotated, List, Optional, Union, Literal
+from typing import Annotated, Any, List, Optional, Union, Literal
 
 from pydantic import BaseModel, Field, ConfigDict
 
@@ -83,6 +83,7 @@ class EnvelopeBase(BaseModel):
 
     sources: List[Source] = Field(default_factory=list)
     policy_id: str
+    data: Any | None = None
 
     meta: Meta
 
